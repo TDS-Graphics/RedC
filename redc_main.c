@@ -9,17 +9,17 @@
 static SDL_Renderer *renderer = nullptr;
 
 
-static void draw_pixel(struct vec2f pos, struct vec3i color) {
+static void draw_pixel(vec2f pos, vec3i color) {
     SDL_SetRenderDrawColor(renderer, color.x, color.y, color.z, 255);
     SDL_RenderPoint(renderer, pos.x, pos.y);
 }
 
-static void draw_line_dda(struct vec2f start, struct vec2f end, struct vec3i color) {
-    const struct vec2f delta = sub_vec2f(end, start);
+static void draw_line_dda(vec2f start, vec2f end, vec3i color) {
+    const vec2f delta = sub_vec2f(end, start);
     const int steps = max((int) fabsf(delta.x), (int) fabsf(delta.y));
-    const struct vec2f increment = div_vec2f_scaler(delta, (float) steps);
+    const vec2f increment = div_vec2f_scaler(delta, (float) steps);
 
-    struct vec2f temp_pos = start;
+    vec2f temp_pos = start;
     for (int i = 0; i <= steps; i++) {
         draw_pixel(temp_pos, color);
         temp_pos = add_vec2f(temp_pos, increment);
@@ -53,15 +53,15 @@ int main(int argc, char *argv[]) {
         SDL_RenderClear(renderer);
 
         for (int i = 0; i < 128; i++) {
-            struct vec2f start = {
+            vec2f start = {
                 .x = gen_random_float_range(0.0f, (float) WINDOW_WIDTH),
                 .y = gen_random_float_range(0.0f, (float) WINDOW_HEIGHT)
             };
-            struct vec2f end = {
+            vec2f end = {
                 .x = gen_random_float_range(0.0f, (float) WINDOW_WIDTH),
                 .y = gen_random_float_range(0.0f, (float) WINDOW_HEIGHT)
             };
-            struct vec3i color = {
+            vec3i color = {
                 .x = gen_random_int_range(0, 256),
                 .y = gen_random_int_range(0, 256),
                 .z = gen_random_int_range(0, 256)
