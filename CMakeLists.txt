@@ -4,10 +4,11 @@ project(RedC C)
 set(CMAKE_C_STANDARD 23)
 
 find_package(SDL3 CONFIG REQUIRED)
+find_package(cglm CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME}
         redc_main.c
-        redc_math.h
+        math_random.h
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 cglm::cglm)
