@@ -20,14 +20,24 @@ static void draw_line_dda(vec2 start, vec2 end, vec3 color) {
     glm_vec2_sub(end, start, delta);
 
     const int steps = max((int) fabsf(delta[0]), (int) fabsf(delta[1]));
+    if (steps == 0) {
+        draw_pixel(start, color);
+    }
+
     vec2 increment = {};
     glm_vec2_divs(delta, (float) steps, increment);
 
-    float *temp_pos = start;
+    vec2 temp_pos = {start[0], start[1]};
     for (int i = 0; i <= steps; i++) {
         draw_pixel(temp_pos, color);
         glm_vec2_add(temp_pos, increment, temp_pos);
     }
+}
+
+static void draw_triangle(vec2 v1, vec2 v2, vec2 v3, vec3 color) {
+    draw_line_dda(v1, v2, color);
+    draw_line_dda(v2, v3, color);
+    draw_line_dda(v3, v1, color);
 }
 
 int main(int argc, char *argv[]) {
@@ -56,12 +66,16 @@ int main(int argc, char *argv[]) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        for (int i = 0; i < 128; i++) {
-            vec2 start = {
+        for (int i = 0; i < 16; i++) {
+            vec2 v1 = {
                 gen_random_float_range(0.0f, (float) WINDOW_WIDTH),
                 gen_random_float_range(0.0f, (float) WINDOW_HEIGHT)
             };
-            vec2 end = {
+            vec2 v2 = {
+                gen_random_float_range(0.0f, (float) WINDOW_WIDTH),
+                gen_random_float_range(0.0f, (float) WINDOW_HEIGHT)
+            };
+            vec2 v3 = {
                 gen_random_float_range(0.0f, (float) WINDOW_WIDTH),
                 gen_random_float_range(0.0f, (float) WINDOW_HEIGHT)
             };
@@ -71,7 +85,7 @@ int main(int argc, char *argv[]) {
                 (float) gen_random_int_range(0, 256)
             };
 
-            draw_line_dda(start, end, color);
+            draw_triangle(v1, v2, v3, color);
         }
 
         SDL_RenderPresent(renderer);
